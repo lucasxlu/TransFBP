@@ -50,6 +50,12 @@ def split_train_and_test_data():
     # train_set_vector = [RAW(config['face_image_filename'].format(_)) for _ in trainset_filenames]
     # test_set_vector = [RAW(config['face_image_filename'].format(_)) for _ in testset_filenames]
 
+    # df = pd.DataFrame(np.array(train_set_vector + test_set_vector))
+    # df.to_excel("./deep_feature.xlsx", sheet_name='features', index=False)
+    #
+    # df = pd.DataFrame(np.array(trainset_label + testset_label))
+    # df.to_excel("./labels.xlsx", sheet_name='labels', index=False)
+
     return train_set_vector, test_set_vector, trainset_label, testset_label
 
 
