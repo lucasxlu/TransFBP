@@ -1,7 +1,7 @@
 # Transferring Rich Deep Features for Facial Beauty Prediction
 
 ## Introduction
-This repo provides the source code for our paper `Transferring Rich Deep Features for Facial Beauty Prediction` in ISAIR2018.
+This repo provides the source code for our paper **Transferring Rich Deep Features for Facial Beauty Prediction** accepted to SCI-indexed journal **Computers & Electrical Engineering**.
 
 ## Benchmark
 Our proposed two-stage method achieves state-of-the-art performance on [SCUT-FBP](http://www.hcii-lab.net/data/scut-fbp/en/introduce.html) and [Female Facial Beauty Dataset (ECCV2010) v1.0](https://www.researchgate.net/publication/261595808_Female_Facial_Beauty_Dataset_ECCV2010_v10) dataset.
