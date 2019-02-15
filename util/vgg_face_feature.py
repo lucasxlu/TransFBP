@@ -8,7 +8,7 @@ import json
 
 sys.path.append('../')
 from model.vgg_face import vgg_face
-from config.cfg import config
+from util.cfg import config
 
 
 def extract_feature(image_filepath, layer_name='conv5_1'):
@@ -77,7 +77,7 @@ def extract_conv_feature(img, layer_name='conv5_1'):
 
 def extract_deep_feats(img_fname):
     """
-    extract deep features and save its feature maps for every layer
+    extract deep features and save its features to a pickle file
     :param img_fname:
     :return:
     """
