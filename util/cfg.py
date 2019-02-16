@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 config = OrderedDict()
+config['scut_fbp_base'] = '/home/xulu/DataSet/Face/SCUT-FBP'
 config['label_excel_path'] = '/home/xulu/DataSet/Face/SCUT-FBP/Rating_Collection/AttractivenessLabel.xlsx'
 config['face_image_filename'] = '/home/xulu/DataSet/Face/SCUT-FBP/Processed/SCUT-FBP-{0}.jpg'
 config['predictor_path'] = "/media/lucasx/Document/ModelZoo/shape_predictor_68_face_landmarks.dat"

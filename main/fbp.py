@@ -10,7 +10,6 @@ from sklearn.externals import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import cross_val_score
 
-
 sys.path.append('../')
 from util.cfg import config
 from util.calc_util import split_train_and_test_data
@@ -18,9 +17,9 @@ from util.file_util import mkdirs_if_not_exist, out_result
 from util.vgg_face_feature import extract_feature
 
 
-def train_model(train_set, test_set, train_label, test_label):
+def train_scutfbp(train_set, test_set, train_label, test_label):
     """
-    train ML model and serialize it into a binary pickle file
+    train ML model on SCUT-FBP dataset and serialize it into a binary pickle file
     :param train_set:
     :param test_set:
     :param train_label:
@@ -186,6 +185,14 @@ def train_and_eval_eccv(train, test):
 
 
 def train_and_eval_eccv_with_align_or_lean(aligned_train, aligned_test, lean_train, lean_test):
+    """
+    train and eval model with frontal faces and side faces
+    :param aligned_train:
+    :param aligned_test:
+    :param lean_train:
+    :param lean_test:
+    :return:
+    """
     aligned_train_vec = list()
     aligned_train_label = list()
     aligned_test_vec = list()
@@ -279,25 +286,10 @@ def train_and_eval_eccv_with_align_or_lean(aligned_train, aligned_test, lean_tra
 
 
 if __name__ == '__main__':
+    # train and test on HotOrNot
     # train_set, test_set = eccv_train_and_test_set(config['eccv_dataset_split_csv_file'])
     # train_and_eval_eccv(train_set, test_set)
 
-    """
-    split_csvs = [
-        '/media/lucasx/Document/DataSet/Face/eccv2010_beauty_data_v1.0/eccv2010_beauty_data/eccv2010_split%d.csv' % _
-        for _ in range(4, 6, 1)]
-    for each_split in split_csvs:
-        train_set, test_set = eccv_train_and_test_set(each_split)
-        train_and_eval_eccv(train_set, test_set)
-        sys.stdout.flush()
-        time.sleep(3)
-        print('*' * 100)
-    """
-
-    # cross validation
-    # dataset, label = prepare_data()
-    # cv_train(dataset, label)
-
-    for idx in range(5):
-        train_set_vector, test_set_vector, trainset_label, testset_label = split_train_and_test_data()
-        train_model(train_set_vector, test_set_vector, trainset_label, testset_label)
+    # train and test on SCUT-FBP
+    train_set_vector, test_set_vector, trainset_label, testset_label = split_train_and_test_data()
+    train_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label)

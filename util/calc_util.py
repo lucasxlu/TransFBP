@@ -36,22 +36,6 @@ def det_landmarks(image_path):
     return result
 
 
-def prepare_data():
-    """
-    return the dataset and correspondent labels
-    :return:
-    """
-    df = pd.read_excel(config['label_excel_path'], 'Sheet1')
-    filename_indexs = df['Image']
-    attractiveness_scores = df['Attractiveness label']
-
-    dataset = [np.concatenate((extract_feature(config['face_image_filename'].format(_), layer_name='conv5_1'),
-                               extract_feature(config['face_image_filename'].format(_), layer_name='conv4_1')),
-                              axis=0) for _ in filename_indexs]
-
-    return dataset, attractiveness_scores
-
-
 def det_mat_landmarks(image):
     """
     detect faces image MAT, return face bbox and landmarks
@@ -173,26 +157,4 @@ def split_train_and_test_data():
     # train_set_vector = [RAW(config['face_image_filename'].format(_)) for _ in trainset_filenames]
     # test_set_vector = [RAW(config['face_image_filename'].format(_)) for _ in testset_filenames]
 
-    # df = pd.DataFrame(np.array(train_set_vector + test_set_vector))
-    # df.to_excel("./deep_feature.xlsx", sheet_name='features', index=False)
-    #
-    # df = pd.DataFrame(np.array(trainset_label + testset_label))
-    # df.to_excel("./labels.xlsx", sheet_name='labels', index=False)
-
     return train_set_vector, test_set_vector, trainset_label, testset_label
-
-
-def prepare_data():
-    """
-    return the dataset and correspondent labels
-    :return:
-    """
-    df = pd.read_excel(config['label_excel_path'], 'Sheet1')
-    filename_indexs = df['Image']
-    attractiveness_scores = df['Attractiveness label']
-
-    dataset = [np.concatenate((extract_feature(config['face_image_filename'].format(_), layer_name='conv5_1'),
-                               extract_feature(config['face_image_filename'].format(_), layer_name='conv4_1')),
-                              axis=0) for _ in filename_indexs]
-
-    return dataset, attractiveness_scores

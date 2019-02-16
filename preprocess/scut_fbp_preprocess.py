@@ -1,13 +1,22 @@
 import os
+import sys
 
 import numpy as np
 import cv2
 
-SCUT_FBP = '/media/lucasx/Document/DataSet/Face/SCUT-FBP/Data_Collection/Data_Collection'
+sys.path.append('../')
+from util.cfg import config
+
+SCUT_FBP = os.path.join(config['scut_fbp_base'], '/Data_Collection/Data_Collection')
 IMAGE_SIZE = 224
 
 
 def padding_images(dst_dir='/media/lucasx/Document/DataSet/Face/SCUT-FBP/Padding'):
+    """
+    zero padding the shorter side of the image to form fixed size one
+    :param dst_dir:
+    :return:
+    """
     if not os.path.exists(dst_dir) or not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
 
@@ -31,6 +40,11 @@ def padding_images(dst_dir='/media/lucasx/Document/DataSet/Face/SCUT-FBP/Padding
 
 
 def warp_images(dst_dir='/media/lucasx/Document/DataSet/Face/SCUT-FBP/Warp'):
+    """
+    warp image to form fixed size one
+    :param dst_dir:
+    :return:
+    """
     if not os.path.exists(dst_dir) or not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
 
