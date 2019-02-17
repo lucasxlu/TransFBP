@@ -85,7 +85,7 @@ def prepare_scutfbp5500(feat_layers):
 
     print('loading serialized deep features...')
     for _ in train_face_img:
-        with open('./features/{0}.pkl'.format(_.split('.')[0]), mode='rb') as f:
+        with open('../util/features/{0}.pkl'.format(_.split('.')[0]), mode='rb') as f:
             feat = []
             layer_feat_dict = pickle.load(f)
             for k, v in layer_feat_dict.items():
@@ -94,7 +94,7 @@ def prepare_scutfbp5500(feat_layers):
         train_feats.append(feat)
 
     for _ in test_face_img:
-        with open('./features/{0}.pkl'.format(_.split('.')[0]), mode='rb') as f:
+        with open('../util/features/{0}.pkl'.format(_.split('.')[0]), mode='rb') as f:
             feat = []
             layer_feat_dict = pickle.load(f)
             for k, v in layer_feat_dict.items():
