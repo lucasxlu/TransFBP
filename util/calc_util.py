@@ -81,11 +81,11 @@ def detect_face_and_cal_beauty(face_filepath='./talor.jpg'):
 
     print('start scoring your face...')
     # if the pre-trained model did not exist, then we train it from scratch
-    if not os.path.exists(config['scut_fbp_reg_model']):
+    if not os.path.exists("./model/BayesRidge_SCUT-FBP.pkl"):
         print('No pre-trained model exists, start training now...')
         sys.exit(0)
 
-    br = joblib.load(config['scut_fbp_reg_model'])
+    br = joblib.load("./model/BayesRidge_SCUT-FBP.pkl")
     print('Finishing training...')
 
     result = det_landmarks(face_filepath)

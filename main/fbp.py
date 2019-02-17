@@ -13,17 +13,18 @@ from sklearn.model_selection import cross_val_score
 sys.path.append('../')
 from util.cfg import config
 from util.calc_util import split_train_and_test_data
-from util.file_util import mkdirs_if_not_exist, out_result
+from util.file_util import mkdirs_if_not_exist, out_result, prepare_scutfbp5500
 from util.vgg_face_feature import extract_feature
 
 
-def train_scutfbp(train_set, test_set, train_label, test_label):
+def train(train_set, test_set, train_label, test_label, data_name):
     """
-    train ML model on SCUT-FBP dataset and serialize it into a binary pickle file
+    train ML model and serialize it into a binary pickle file
     :param train_set:
     :param test_set:
     :param train_label:
     :param test_label:
+    :param data_name
     :return:
     :Version:1.0
     """
@@ -39,12 +40,15 @@ def train_scutfbp(train_set, test_set, train_label, test_label):
     print('===============The Pearson Correlation of Model is {0}===================='.format(pc))
 
     mkdirs_if_not_exist('./model')
-    joblib.dump(reg, config['scut_fbp_reg_model'])
+    joblib.dump(reg, './model/BayesRidge_%s.pkl' % data_name)
     print('The regression model has been persisted...')
-    csv_tag = time.time()
+
+    mkdirs_if_not_exist('./result')
+
+    out_result(test_set, predicted_label, test_label, None, path='./result/Pred_GT_%f.csv' % data_name)
+
     df = pd.DataFrame([mae_lr, rmse_lr, pc])
-    out_result(test_set, predicted_label, test_label, None, path='./result/%f.csv' % csv_tag)
-    df.to_csv('./result/performance_%s.csv' % csv_tag, index=False)
+    df.to_csv('./result/%s.csv' % data_name, index=False)
     print('The result csv file has been generated...')
 
 
@@ -71,7 +75,7 @@ def cv_train(dataset, labels, cv=10):
     print('=========The Pearson Correlation of Model is {0}========='.format(np.mean(pc_list)))
 
     mkdirs_if_not_exist('./model')
-    joblib.dump(reg, config['scut_fbp_reg_model'])
+    joblib.dump(reg, "./model/BayesRidge_SCUT-FBP.pkl")
     print('The regression model has been persisted...')
 
 
@@ -291,5 +295,9 @@ if __name__ == '__main__':
     # train_and_eval_eccv(train_set, test_set)
 
     # train and test on SCUT-FBP
-    train_set_vector, test_set_vector, trainset_label, testset_label = split_train_and_test_data()
-    train_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label)
+    # train_set_vector, test_set_vector, trainset_label, testset_label = split_train_and_test_data()
+    # train(train_set_vector, test_set_vector, trainset_label, testset_label, "SCUT-FBP")
+
+    # train and test on SCUT-FBP5500
+    train_feats, train_score, test_feats, test_score = prepare_scutfbp5500(feat_layers=["conv4_1", "conv5_1"])
+    train(train_feats, test_feats, train_score, test_score, "SCUT-FBP5500")
