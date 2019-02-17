@@ -62,7 +62,7 @@ def prepare_scutfbp5500(feat_layers):
     :param feat_layers: features in these layer with concatenation fusion
     :return:
     """
-    if not os.path.exists('./features') or len(os.listdir('./features')) == 0:
+    if not os.path.exists('../util/features') or len(os.listdir('../util/features')) == 0:
         print('No deep features...')
         sys.exit(0)
 
