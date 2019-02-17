@@ -28,6 +28,9 @@ def train(train_set, test_set, train_label, test_label, data_name):
     :return:
     :Version:1.0
     """
+    print("The shape of training set is {0}".format(np.array(train_feats).shape))
+    print("The shape of test set is {0}".format(np.array(test_feats).shape))
+
     reg = linear_model.BayesianRidge()
     reg.fit(train_set, train_label)
 

@@ -102,4 +102,4 @@ def prepare_scutfbp5500(feat_layers):
                     feat.append(np.array(layer_feat_dict[k]).ravel().tolist())
         test_feats.append(feat)
 
-    return train_feats, train_score, test_feats, test_score
+    return np.array(train_feats), np.array(train_score), np.array(test_feats), np.array(test_score)
