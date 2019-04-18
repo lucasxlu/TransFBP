@@ -9,15 +9,17 @@ from sklearn import linear_model
 from sklearn.externals import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import cross_val_score
+import dask.dataframe as dd
+import dask.array as da
 
 sys.path.append('../')
-from util.cfg import config
 from util.calc_util import split_train_and_test_data
+from util.cfg import config
 from util.file_util import mkdirs_if_not_exist, out_result, prepare_scutfbp5500
 from util.vgg_face_feature import extract_feature
 
 
-def train(train_set, test_set, train_label, test_label, data_name):
+def train(train_set, test_set, train_label, test_label, data_name, distribute_training=False):
     """
     train ML model and serialize it into a binary pickle file
     :param train_set:
@@ -25,14 +27,20 @@ def train(train_set, test_set, train_label, test_label, data_name):
     :param train_label:
     :param test_label:
     :param data_name
+    :param distribute_training
     :return:
     :Version:1.0
     """
-    print("The shape of training set is {0}".format(np.array(train_feats).shape))
-    print("The shape of test set is {0}".format(np.array(test_feats).shape))
-
+    print("The shape of training set is {0}".format(np.array(train_set).shape))
+    print("The shape of test set is {0}".format(np.array(test_set).shape))
+    print('Use distribute training ? >> {0}'.format(distribute_training))
     reg = linear_model.BayesianRidge()
-    reg.fit(train_set, train_label)
+    if not distribute_training:
+        reg.fit(train_set, train_label)
+    else:
+        train_set, test_set, train_label, test_label = da.array(train_set), da.array(test_set), da.array(
+            train_label), da.array(test_label)
+        reg.fit(train_set, train_label)
 
     predicted_label = reg.predict(test_set)
     mae_lr = round(mean_absolute_error(test_label, predicted_label), 4)
@@ -48,7 +56,7 @@ def train(train_set, test_set, train_label, test_label, data_name):
 
     mkdirs_if_not_exist('./result')
 
-    out_result(test_set, predicted_label, test_label, None, path='./result/Pred_GT_%f.csv' % data_name)
+    out_result(test_set, predicted_label, test_label, None, path='./result/Pred_GT_{0}.csv'.format(data_name))
 
     df = pd.DataFrame([mae_lr, rmse_lr, pc])
     df.to_csv('./result/%s.csv' % data_name, index=False)
@@ -292,15 +300,50 @@ def train_and_eval_eccv_with_align_or_lean(aligned_train, aligned_test, lean_tra
     out_result(test_filenames, predicted_label, test_label, attribute_list, './result/%f_detail.csv' % csv_file_tag)
 
 
+def train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label):
+    """
+    train and eval on SCUT-FBP dataset
+    :param train_set_vector:
+    :param test_set_vector:
+    :param trainset_label:
+    :param testset_label:
+    :return:
+    """
+    print("The shape of training set is {0}".format(np.array(train_set_vector).shape))
+    print("The shape of test set is {0}".format(np.array(test_set_vector).shape))
+    reg = linear_model.BayesianRidge()
+    reg.fit(train_set_vector, trainset_label)
+
+    predicted_label = reg.predict(test_set_vector)
+    mae_lr = round(mean_absolute_error(testset_label, predicted_label), 4)
+    rmse_lr = round(math.sqrt(mean_squared_error(testset_label, predicted_label)), 4)
+    pc = round(np.corrcoef(testset_label, predicted_label)[0, 1], 4)
+    print('===============The Mean Absolute Error of Model is {0}===================='.format(mae_lr))
+    print('===============The Root Mean Square Error of Model is {0}===================='.format(rmse_lr))
+    print('===============The Pearson Correlation of Model is {0}===================='.format(pc))
+
+    mkdirs_if_not_exist('./model')
+    joblib.dump(reg, './model/BayesRidge_SCUTFBP.pkl')
+    print('The regression model has been persisted...')
+
+    mkdirs_if_not_exist('./result')
+
+    out_result(test_set_vector, predicted_label, testset_label, None, path='./result/Pred_GT_SCUTFBP.csv')
+
+    df = pd.DataFrame([mae_lr, rmse_lr, pc])
+    df.to_csv('./result/BayesRidge_SCUTFBP.csv', index=False)
+    print('The result csv file has been generated...')
+
+
 if __name__ == '__main__':
     # train and test on HotOrNot
     # train_set, test_set = eccv_train_and_test_set(config['eccv_dataset_split_csv_file'])
     # train_and_eval_eccv(train_set, test_set)
 
     # train and test on SCUT-FBP
-    # train_set_vector, test_set_vector, trainset_label, testset_label = split_train_and_test_data()
-    # train(train_set_vector, test_set_vector, trainset_label, testset_label, "SCUT-FBP")
+    train_set_vector, test_set_vector, trainset_label, testset_label = split_train_and_test_data()
+    train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label)
 
     # train and test on SCUT-FBP5500
-    train_feats, train_score, test_feats, test_score = prepare_scutfbp5500(feat_layers=["conv4_1", "conv5_1"])
-    train(train_feats, test_feats, train_score, test_score, "SCUT-FBP5500")
+    # train_feats, train_score, test_feats, test_score = prepare_scutfbp5500(feat_layers=["conv4_1", "conv5_1"])
+    # train(train_feats, test_feats, train_score, test_score, "SCUT-FBP5500", distribute_training=True)
