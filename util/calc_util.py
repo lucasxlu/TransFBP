@@ -157,4 +157,4 @@ def split_train_and_test_data():
     # train_set_vector = [RAW(config['face_image_filename'].format(_)) for _ in trainset_filenames]
     # test_set_vector = [RAW(config['face_image_filename'].format(_)) for _ in testset_filenames]
 
-    return train_set_vector, test_set_vector, trainset_label, testset_label
+    return train_set_vector, test_set_vector, trainset_label, testset_label, trainset_filenames, testset_filenames

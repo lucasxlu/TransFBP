@@ -19,7 +19,7 @@ from util.file_util import mkdirs_if_not_exist, out_result, prepare_scutfbp5500
 from util.vgg_face_feature import extract_feature
 
 
-def train(train_set, test_set, train_label, test_label, data_name, distribute_training=False):
+def train(train_set, test_set, train_label, test_label, data_name, test_filenames, distribute_training=False):
     """
     train ML model and serialize it into a binary pickle file
     :param train_set:
@@ -27,6 +27,7 @@ def train(train_set, test_set, train_label, test_label, data_name, distribute_tr
     :param train_label:
     :param test_label:
     :param data_name
+    :param test_filenames
     :param distribute_training
     :return:
     :Version:1.0
@@ -56,7 +57,7 @@ def train(train_set, test_set, train_label, test_label, data_name, distribute_tr
 
     mkdirs_if_not_exist('./result')
 
-    out_result(test_set, predicted_label, test_label, None, path='./result/Pred_GT_{0}.csv'.format(data_name))
+    out_result(test_filenames, predicted_label, test_label, None, path='./result/Pred_GT_{0}.csv'.format(data_name))
 
     df = pd.DataFrame([mae_lr, rmse_lr, pc])
     df.to_csv('./result/%s.csv' % data_name, index=False)
@@ -300,13 +301,14 @@ def train_and_eval_eccv_with_align_or_lean(aligned_train, aligned_test, lean_tra
     out_result(test_filenames, predicted_label, test_label, attribute_list, './result/%f_detail.csv' % csv_file_tag)
 
 
-def train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label):
+def train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label, testset_filenames):
     """
     train and eval on SCUT-FBP dataset
     :param train_set_vector:
     :param test_set_vector:
     :param trainset_label:
     :param testset_label:
+    :param testset_filenames
     :return:
     """
     print("The shape of training set is {0}".format(np.array(train_set_vector).shape))
@@ -328,7 +330,7 @@ def train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, te
 
     mkdirs_if_not_exist('./result')
 
-    out_result(test_set_vector, predicted_label, testset_label, None, path='./result/Pred_GT_SCUTFBP.csv')
+    out_result(testset_filenames, predicted_label, testset_label, None, path='./result/Pred_GT_SCUTFBP.csv')
 
     df = pd.DataFrame([mae_lr, rmse_lr, pc])
     df.to_csv('./result/BayesRidge_SCUTFBP.csv', index=False)
@@ -341,9 +343,9 @@ if __name__ == '__main__':
     # train_and_eval_eccv(train_set, test_set)
 
     # train and test on SCUT-FBP
-    train_set_vector, test_set_vector, trainset_label, testset_label = split_train_and_test_data()
-    train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label)
+    train_set_vector, test_set_vector, trainset_label, testset_label, trainset_filenames, testset_filenames = split_train_and_test_data()
+    train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label, testset_filenames)
 
     # train and test on SCUT-FBP5500
-    # train_feats, train_score, test_feats, test_score = prepare_scutfbp5500(feat_layers=["conv4_1", "conv5_1"])
+    # train_feats, train_score, test_feats, test_score, train_filenames, test_filenames = prepare_scutfbp5500(feat_layers=["conv4_1", "conv5_1"])
     # train(train_feats, test_feats, train_score, test_score, "SCUT-FBP5500", distribute_training=True)

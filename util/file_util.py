@@ -83,6 +83,9 @@ def prepare_scutfbp5500(feat_layers):
     train_feats = []
     test_feats = []
 
+    train_filenames = []
+    test_filenames = []
+
     print('loading serialized deep features...')
     for _ in train_face_img:
         with open('../util/features/{0}.pkl'.format(_.split('.')[0]), mode='rb') as f:
@@ -92,6 +95,7 @@ def prepare_scutfbp5500(feat_layers):
                 if k in feat_layers:
                     feat += np.array(layer_feat_dict[k]).ravel().tolist()
         train_feats.append(feat)
+        train_filenames.append(_)
 
     for _ in test_face_img:
         with open('../util/features/{0}.pkl'.format(_.split('.')[0]), mode='rb') as f:
@@ -101,5 +105,6 @@ def prepare_scutfbp5500(feat_layers):
                 if k in feat_layers:
                     feat += np.array(layer_feat_dict[k]).ravel().tolist()
         test_feats.append(feat)
+        test_filenames.append(_)
 
-    return np.array(train_feats), np.array(train_score), np.array(test_feats), np.array(test_score)
+    return np.array(train_feats), np.array(train_score), np.array(test_feats), np.array(test_score), train_filenames, test_filenames
