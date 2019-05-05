@@ -34,6 +34,11 @@ def main():
     X_train, y_train, X_test, y_test, train_filenames, test_filenames = prepare_scutfbp5500(
         feat_layers=["conv4_1", "conv5_1"])
 
+    print('Shape of X_train: {0}'.format(X_train))
+    print('Shape of X_test: {0}'.format(X_test))
+    print('Shape of y_train: {0}'.format(y_train))
+    print('Shape of y_test: {0}'.format(y_test))
+
     N = 3300
     D = len(X_train[0])
 

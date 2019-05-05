@@ -107,4 +107,7 @@ def prepare_scutfbp5500(feat_layers):
         test_feats.append(feat)
         test_filenames.append(_)
 
-    return np.array(train_feats), np.array(train_score), np.array(test_feats), np.array(test_score), train_filenames, test_filenames
+    print('finish loading deep features...')
+
+    return np.array(train_feats), np.array(train_score), np.array(test_feats), np.array(
+        test_score), train_filenames, test_filenames
