@@ -345,9 +345,7 @@ if __name__ == '__main__':
     # train and test on SCUT-FBP
     # train_set_vector, test_set_vector, trainset_label, testset_label, trainset_filenames, testset_filenames = split_train_and_test_data()
     # train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label, testset_filenames)
-    #
+
     # train and test on SCUT-FBP5500
     train_feats, train_score, test_feats, test_score, train_filenames, test_filenames = prepare_scutfbp5500(feat_layers=["conv4_1", "conv5_1"])
-    train_feats = train_feats.astype(np.float16)
-    test_feats = test_feats.astype(np.float16)
     train(train_feats, test_feats, train_score, test_score, "SCUT-FBP5500", test_filenames, distribute_training=False)

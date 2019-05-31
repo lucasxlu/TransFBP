@@ -93,7 +93,7 @@ def prepare_scutfbp5500(feat_layers):
             layer_feat_dict = pickle.load(f)
             for k, v in layer_feat_dict.items():
                 if k in feat_layers:
-                    feat += np.array(layer_feat_dict[k]).ravel().tolist()
+                    feat += np.array(layer_feat_dict[k]).astype(np.float16).ravel().tolist()
         train_feats.append(feat)
         train_filenames.append(_)
 
@@ -103,7 +103,7 @@ def prepare_scutfbp5500(feat_layers):
             layer_feat_dict = pickle.load(f)
             for k, v in layer_feat_dict.items():
                 if k in feat_layers:
-                    feat += np.array(layer_feat_dict[k]).ravel().tolist()
+                    feat += np.array(layer_feat_dict[k]).astype(np.float16).ravel().tolist()
         test_feats.append(feat)
         test_filenames.append(_)
 

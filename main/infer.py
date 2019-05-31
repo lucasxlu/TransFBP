@@ -12,9 +12,11 @@ from util.vgg_face_feature import extract_conv_feature
 def infer_from_img(img_file):
     img = cv2.imread(img_file)
     img = cv2.resize(img, (224, 224))
+    # tik = time.time()
+    feat = extract_conv_feature(img, layer_name='conv5_1').tolist()
+    reg = linear_model.BayesianRidge(np.array(feat))
+    reg.fit(np.random.rand(1, len(feat)), np.array(1))
     tik = time.time()
-    feat = extract_conv_feature(img, layer_name='conv5_1') + extract_conv_feature(img, layer_name='conv4_1')
-    reg = linear_model.BayesianRidge()
     score = reg.predict(feat)
     tok = time.time()
 
