@@ -6,6 +6,7 @@ import time
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
+from sklearn.decomposition import PCA
 from sklearn.externals import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import cross_val_score
@@ -19,9 +20,10 @@ from util.file_util import mkdirs_if_not_exist, out_result, prepare_scutfbp5500
 from util.vgg_face_feature import extract_feature
 
 
-def train(train_set, test_set, train_label, test_label, data_name, test_filenames, distribute_training=False):
+def train(train_set, test_set, train_label, test_label, data_name, test_filenames, dimension_reduce=False,
+          distribute_training=False):
     """
-    train ML model and serialize it into a binary pickle file
+    train ML model, evaluate on testset, and serialize it into a binary pickle file
     :param train_set:
     :param test_set:
     :param train_label:
@@ -32,10 +34,22 @@ def train(train_set, test_set, train_label, test_label, data_name, test_filename
     :return:
     :Version:1.0
     """
-    print("The shape of training set is {0}".format(np.array(train_set).shape))
-    print("The shape of test set is {0}".format(np.array(test_set).shape))
+    train_set = np.array(train_set)
+    test_set = np.array(test_set)
+
+    print("The shape of training set before dimension reduction is {0}".format(train_set.shape))
+    print("The shape of test set before dimension reduction is {0}".format(test_set.shape))
     print('Use distribute training ? >> {0}'.format(distribute_training))
     reg = linear_model.BayesianRidge()
+
+    if dimension_reduce:
+        pca = PCA(n_components=128)
+        train_set = pca.fit_transform(train_set)
+        test_set = pca.fit_transform(test_set)
+
+    print("The shape of training set after dimension reduction is {0}".format(train_set.shape))
+    print("The shape of test set after dimension reduction is {0}".format(test_set.shape))
+
     if not distribute_training:
         reg.fit(train_set, train_label)
     else:
@@ -347,5 +361,7 @@ if __name__ == '__main__':
     # train_and_eval_scutfbp(train_set_vector, test_set_vector, trainset_label, testset_label, testset_filenames)
 
     # train and test on SCUT-FBP5500
-    train_feats, train_score, test_feats, test_score, train_filenames, test_filenames = prepare_scutfbp5500(feat_layers=["conv4_1", "conv5_1"])
-    train(train_feats, test_feats, train_score, test_score, "SCUT-FBP5500", test_filenames, distribute_training=False)
+    train_feats, train_score, test_feats, test_score, train_filenames, test_filenames = prepare_scutfbp5500(
+        feat_layers=["fc6", "fc7"])
+    train(train_feats, test_feats, train_score, test_score, "SCUT-FBP5500", test_filenames, dimension_reduce=False,
+          distribute_training=False)
