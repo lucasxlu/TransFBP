@@ -31,7 +31,7 @@ TransFBP also achieves very competitive performance on [SCUT-FBP5500](https://ar
 | Eigenface | 0.180 |
 | Multiscale Model | 0.458 |
 | Auto Encoder | 0.437 |
-| Ours | 0.468 |
+| **TransFBP (Ours)** | **0.468** |
 
 * Evaluation with the SCUT-FBP5500 Dataset
 
@@ -43,7 +43,7 @@ TransFBP also achieves very competitive performance on [SCUT-FBP5500](https://ar
 | AlexNet | 0.8298 |
 | ResNet18 | 0.8513 |
 | ResNeXt50 | 0.8777 |
-| Ours | 0.8519 |
+| **TransFBP (Ours)** | 0.8519 |
 
 
 ## Examples
