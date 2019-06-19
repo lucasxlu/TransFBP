@@ -49,6 +49,11 @@ TransFBP also achieves very competitive performance on [SCUT-FBP5500](https://ar
 ## Examples
 ![eccv_pred](./eccv_pred.png)
 
+
+## Resources
+* [Pretrained Model on SCUT-FBP5500](https://drive.google.com/file/d/1iPr3zLbWvKlYco988Xis4IerkeSaNk5j/view?usp=sharing)
+
+
 ## Citation 
 If you find the code or the experimental results useful in your research, please consider citing our paper as:
 
