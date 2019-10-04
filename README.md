@@ -52,6 +52,7 @@ TransFBP also achieves very competitive performance on [SCUT-FBP5500](https://ar
 
 ## Resources
 * [Pretrained Model on SCUT-FBP5500](https://drive.google.com/file/d/1iPr3zLbWvKlYco988Xis4IerkeSaNk5j/view?usp=sharing)
+* [Pretrained VGG-Face Weights](https://drive.google.com/file/d/1Iy2MclKGL2uIlfUttHl0tT_M8SJ8wpI8/view?usp=sharing)
 
 
 ## Citation 
